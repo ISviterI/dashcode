@@ -50,6 +50,8 @@ class Dashcode:
             if self.params.get(param) is not None:
                 pid = self.params[param]
                 extraparams += f",{str(pid)},{value}"
+            else:
+                extraparams += f",{str(param)},{value}"
 
         oid = self.objects.get(obj, 1)
         if oid:

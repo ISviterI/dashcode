@@ -21,4 +21,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    keywords='geometry dash, gd, level-generator, automation, 2.2, python, dash, dashcode, code',
 )

@@ -15,7 +15,11 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires=">=3.6",
-    url="https://github.com/ISviterI/dashcode",
+    project_urls={
+        "Homepage": "https://github.com/ISviterI/dashcode",
+        "Wiki": "https://github.com/ISviterI/dashcode/wiki",
+        "Documentation": "https://github.com/ISviterI/dashcode/wiki/Documentation",
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

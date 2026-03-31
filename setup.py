@@ -16,6 +16,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires=">=3.6",
+    url="https://github.com/ISviterI/dashcode",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

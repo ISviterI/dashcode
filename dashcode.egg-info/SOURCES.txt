@@ -1,0 +1,8 @@
+README.md
+setup.py
+dashcode/__init__.py
+dashcode/core.py
+dashcode.egg-info/PKG-INFO
+dashcode.egg-info/SOURCES.txt
+dashcode.egg-info/dependency_links.txt
+dashcode.egg-info/top_level.txt

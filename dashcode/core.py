@@ -60,6 +60,14 @@ class Dashcode:
         else:
             objects.append(
                 f"1,{str(obj)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
+    def parse_object_string(self,objstr):
+        data = objstr.split(',')
+
+        obj_dict = {}
+        for i in range(0, len(data) - 1, 2):
+            key = data[i]
+            value = data[i + 1]
+            obj_dict[key] = value
 
         return obj_dict
     def addprefab(self, obj:str, params:dict, prefab:str):

@@ -3,6 +3,8 @@ import gzip
 obj_string = ""
 lvlname = ""
 
+print("Dashcode loaded! Have fun and also join our discord server please: https://discord.gg/MXv3KTFmPE")
+
 class Dashcode:
     def __init__(self):
         self.objects = []

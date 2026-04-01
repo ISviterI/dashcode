@@ -151,13 +151,13 @@ class Dashcode:
                 for i2,v2 in v.items():
                     params[i2] = v2
                 self.addobject(i,params)
-    def create_gmd_file(self, level_name, author_name, objects_string):
+    def create_gmd_file(self, level_name, objects_string):
         global lvlname
         lvlname = level_name
         final_string_to_pack = objects_string
         gzipped = gzip.compress(final_string_to_pack.encode('utf-8'))
         b64_objects = base64.b64encode(gzipped).decode('utf-8').replace('/', '_').replace('+', '-')
-        return f'''<?xml version="1.0"?><plist version="1.0" gjver="2.0"><dict><k>kCEK</k><i>4</i><k>k2</k><s>{level_name}</s><k>k4</k><s>{b64_objects}</s><k>k5</k><s>{author_name}</s><k>k11</k><i>1091</i><k>k16</k><i>1</i><k>k80</k><i>56</i></dict></plist>'''
+        return f'''<?xml version="1.0"?><plist version="1.0" gjver="2.0"><dict><k>kCEK</k><i>4</i><k>k2</k><s>{level_name}</s><k>k4</k><s>{b64_objects}</s><k>k5</k><s>Doesn't matter</s><k>k11</k><i>1091</i><k>k16</k><i>1</i><k>k80</k><i>56</i></dict></plist>'''
 
     def decode_objects(self):
         objects = self.objects

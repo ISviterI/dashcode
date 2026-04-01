@@ -1,9 +1,10 @@
 Metadata-Version: 2.4
 Name: dashcode
-Version: 1.2.1
+Version: 1.2.3
 Summary: A library for Geometry Dash level generation using .gmd files
 Author: IWiterI
 Project-URL: Homepage, https://github.com/ISviterI/dashcode
+Project-URL: Discord, https://discord.gg/MXv3KTFmPE
 Project-URL: Wiki, https://github.com/ISviterI/dashcode/wiki
 Project-URL: Documentation, https://github.com/ISviterI/dashcode/wiki/Documentation
 Keywords: geometry dash,gd,level-generator,automation,2.2,python,dash,dashcode,code
@@ -22,6 +23,8 @@ Dynamic: requires-python
 Dynamic: summary
 
 # Dashcode
+
+[![Discord](https://img.shields.io/discord/1488880281376260186?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/MXv3KTFmPE)
 
 Dashcode is a specialized Python library for the programmatic generation of Geometry Dash levels (compatible with version 2.2+). It allows developers to build complex level structures, triggers, and gameplay mechanics entirely through code.
 

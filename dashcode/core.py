@@ -25,6 +25,11 @@ class Dashcode:
             "RotateDegrees": 68,
             "Times360": 69,
             "LockRot": 70,
+            "Red":7,
+            "Green":8,
+            "Blue":9,
+            "Fade":10,
+            "TargetColor":23
         }
         self.objects = {
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,

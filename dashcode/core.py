@@ -51,7 +51,9 @@ class Dashcode:
         self.timeline = {}
     def setobjects(self, objs:dict):
         self.objectids = objs
-
+    def export_gmd(self, filedata, filename:str="Level"):
+        with open(f"{filename}.gmd", "w", encoding="utf-8") as f:
+            f.write(filedata)
     def setparams(self, params:dict):
         self.params = params
 

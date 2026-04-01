@@ -1,5 +1,7 @@
 # Dashcode
 
+[![Discord](https://img.shields.io/discord/1488880281376260186?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/MXv3KTFmPE)
+
 Dashcode is a specialized Python library for the programmatic generation of Geometry Dash levels (compatible with version 2.2+). It allows developers to build complex level structures, triggers, and gameplay mechanics entirely through code.
 
 ## Key Features

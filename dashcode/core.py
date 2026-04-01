@@ -13,6 +13,12 @@ class Dashcode:
             "Hide": 12,
             "Group": 57,
             "TGroup": 51,
+            "MoveX":28,
+            "MoveY":29,
+            "LockToPX":34,
+            "LockToPY": 35,
+            "UseTarget":36,
+            "TMoveGroup":39,
             "Duration": 10,
             "Alpha": 11,
             "TouchTrigger": 11,
@@ -36,7 +42,7 @@ class Dashcode:
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,
             "monster": 918, "bush": 128, "cloud": 129,
             "alpha": 1007, "toggle": 1049, "rotate": 1346,
-            "zoom": 1913, "reverse": 1912,
+            "zoom": 1913, "reverse": 1912, "move":901,
             "checkpoint": 2063,
             "spawn":1268,
             "end": 3600,
@@ -59,100 +65,89 @@ class Dashcode:
     def setparams(self, params:dict):
         self.params = params
 
+    def format_groups(self, group_list):
+        if not group_list:
+            return ""
+        return ".".join(map(str, group_list))
     def get_free_group(self):
         used_groups = set()
         for obj in self.objects:
             if "57" in obj:
                 parsed = Dashcode().parse_object_string(obj)
-                for i,v in parsed.items():
+                for i2,v2 in parsed.items():
                     #print(i,v,type(i))
-                    if i == "57":
-                        used_groups.add(int(v))
+                    if i2 == "57":
+                        for v in v2.split("."):
+                            used_groups.add(int(v))
         current_id = 1
         while current_id in used_groups:
             current_id += 1
         return str(current_id)
-    def addobject(self, obj: str, params: dict):
-        objects = self.objects
-        if len(objects) <= 0:
-            objects.append(
-                f"1,1,2,{str(-10 * 30)},3,{str(-10 * 30)},12,1,13,1")
+
+    def addobject(self, obj, params: dict):
+        if len(self.objects) <= 0:
+            self.objects.append(f"1,1,2,{-10 * 30},3,{-10 * 30},12,1,13,1")
         extraparams = ""
         for param, value in params.items():
-            for i in self.params:
-                if param.startswith(i):
-                    pid = self.params[param]
-                    extraparams += f",{str(pid)},{value}"
+            if param in ["X", "Y", "EX", "EY"]:
+                continue
+            target_id = None
+            for i, v in self.params.items():
+                if str(param).startswith(str(i)):
+                    target_id = v
+                    break
+            if target_id is not None:
+                if target_id == 57 and isinstance(value, list):
+                    extraparams += f",57,{self.format_groups(value)}"
                 else:
-                    extraparams += f",{str(param)},{value}"
-
-        oid = self.objectids.get(obj, 1)
-        if oid:
-            objects.append(
-                f"1,{str(oid)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
-        else:
-            objects.append(
-                f"1,{str(obj)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
+                    extraparams += f",{target_id},{value}"
+            else:
+                extraparams += f",{param},{value}"
+        oid = self.objectids.get(obj, obj)
+        pos_x = params.get('X', 0) * 30 + 15
+        pos_y = params.get('Y', 0) * 30 + 15
+        full_obj_string = f"1,{oid},2,{pos_x},3,{pos_y}{extraparams}"
+        self.objects.append(full_obj_string)
     def parse_object_string(self,objstr):
         data = objstr.split(',')
-
         obj_dict = {}
         for i in range(0, len(data) - 1, 2):
             key = data[i]
             value = data[i + 1]
             obj_dict[key] = value
-
         return obj_dict
-    def addprefab(self, obj:str, params:dict, prefab:str):
-        objects = self.objects
-        extraparams = ""
-        for param, value in params.items():
-            if self.params.get(param) is not None:
-                pid = self.params[param]
-                extraparams += f",{str(pid)},{value}"
-            else:
-                extraparams += f",{str(param)},{value}"
 
-        oid = self.objectids.get(obj, 1)
-        if prefab:
-            #print("1")
-            fab = self.prefabs.get(prefab)
-            if fab:
-                #print(fab)
-                #print("2")
-                newobjs = []
-                if fab.get("X") == 0:
-                    #print("3")
-                    for i in range(params.get('EX')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
-                if fab.get("Y") == 0:
-                    #print("3")
-                    for i in range(params.get('EY')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
-                if fab.get("SQ") == 0:
-                    for i in range(params.get('EX')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
-                        for v in range(params.get('EY') - 1):
-                            newobjs.append(
-                                f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15 + (v * 30) + 30)}{extraparams}")
-                if fab.get("X") == 1:
-                    for i in range(params.get('EX')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
-                    for i in range(params.get('EX')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15 + params.get("EY") * 30)}{extraparams}")
-                if fab.get("Y") == 1:
-                    for i in range(params.get('EY')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
-                    for i in range(params.get('EY')):
-                        newobjs.append(
-                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + params.get("EX") * 30)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
-                objects += newobjs
+    def addprefab(self, obj: str, params: dict, prefab: str):
+        fab = self.prefabs.get(prefab)
+        if not fab:
+            return
+        ex = params.get('EX', 0)
+        ey = params.get('EY', 0)
+        base_x = params.get('X', 0)
+        base_y = params.get('Y', 0)
+        def place(x_val, y_val):
+            current_params = dict(params)
+            current_params["X"] = x_val
+            current_params["Y"] = y_val
+            self.addobject(obj, current_params)
+        if fab.get("X") == 0:
+            for i in range(ex):
+                place(base_x + i, base_y)
+        elif fab.get("Y") == 0:
+            for i in range(ey):
+                place(base_x, base_y + i)
+        elif fab.get("SQ") == 0:
+            for i in range(ex):
+                for v in range(ey):
+                    place(base_x + i, base_y + v)
+        elif fab.get("X") == 1:
+            for i in range(ex):
+                place(base_x + i, base_y)
+                place(base_x + i, base_y + ey)
+        elif fab.get("Y") == 1:
+            for i in range(ey):
+                place(base_x, base_y + i)
+                place(base_x + ex, base_y + i)
     def build_timeline(self, timeline:list):
         cdelay = 0
         for tlobj in timeline:

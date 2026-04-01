@@ -17,7 +17,7 @@ class Dashcode:
             "TGroup": 51,
             "Duration": 10,
             "Alpha": 11,
-            "TouchTrigger": 11,  # Твой ID из GMD
+            "TouchTrigger": 11,
             "ActivateGroup": 56,
             "ScaleX": 128,
             "ScaleY": 129,

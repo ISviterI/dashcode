@@ -37,6 +37,12 @@ class Dashcode:
             "p_cube": 12, "p_ship": 13, "p_ball": 47, "p_ufo": 111,
             "p_wave": 660, "p_robot": 745, "p_spider": 1331, "p_swing": 1933
         }
+        self.prefabs = {
+            "wall": {"Y":0},
+            "platform": {"X":0},
+            "square": {"SQ":0},
+            "corridor": {"X":1},
+        }
 
     def setobjects(self, objs:dict):
         self.objects = objs

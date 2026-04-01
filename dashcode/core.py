@@ -61,6 +61,57 @@ class Dashcode:
             objects.append(
                 f"1,{str(obj)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
 
+        return obj_dict
+    def addprefab(self, obj:str, params:dict, prefab:str):
+        global objects
+        extraparams = ""
+        for param, value in params.items():
+            if self.params.get(param) is not None:
+                pid = self.params[param]
+                extraparams += f",{str(pid)},{value}"
+            else:
+                extraparams += f",{str(param)},{value}"
+
+        oid = self.objects.get(obj, 1)
+        if prefab:
+            #print("1")
+            fab = self.prefabs.get(prefab)
+            if fab:
+                #print(fab)
+                #print("2")
+                newobjs = []
+                if fab.get("X") == 0:
+                    #print("3")
+                    for i in range(params.get('EX')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
+                if fab.get("Y") == 0:
+                    #print("3")
+                    for i in range(params.get('EY')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
+                if fab.get("SQ") == 0:
+                    for i in range(params.get('EX')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
+                        for v in range(params.get('EY') - 1):
+                            newobjs.append(
+                                f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15 + (v * 30) + 30)}{extraparams}")
+                if fab.get("X") == 1:
+                    for i in range(params.get('EX')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
+                    for i in range(params.get('EX')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + (i * 30))},3,{str(params.get('Y') * 30 + 15 + params.get("EY") * 30)}{extraparams}")
+                if fab.get("Y") == 1:
+                    for i in range(params.get('EY')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
+                    for i in range(params.get('EY')):
+                        newobjs.append(
+                            f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + params.get("EX") * 30)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
+                objects += newobjs
     def create_gmd_file(self, level_name, author_name, objects_string):
         global lvlname
         lvlname = level_name

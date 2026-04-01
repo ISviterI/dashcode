@@ -45,6 +45,9 @@ class Dashcode:
         self.params = params
 
     def addobject(self, obj: str, params: dict):
+        if len(objects) <= 0:
+            objects.append(
+                f"1,1,2,{str(-10 * 30)},3,{str(-10 * 30)},12,1,13,1")
         extraparams = ""
         for param, value in params.items():
             if self.params.get(param) is not None:

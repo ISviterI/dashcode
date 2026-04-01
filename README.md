@@ -13,7 +13,8 @@ Dashcode is a specialized Python library for the programmatic generation of Geom
 
 ## Examples
 Check the `/examples` directory for advanced usage:
-* `simple_level.py` - Basic object placement.
+* `spikes_and_orbs.py` - Basic object placement.
+* `prefabs.py` - Placing objects using prefabs
 * `timeline_demo.py` - Using `build_timeline()` for synced events.
 
 

@@ -12,7 +12,7 @@ class Dashcode:
         global objects
         self.params = {
             "NoTouch": 13,
-            "Hide": 11,
+            "Hide": 12,
             "Group": 57,
             "TGroup": 51,
             "Duration": 10,

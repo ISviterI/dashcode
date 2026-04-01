@@ -2,5 +2,6 @@
 __pycache__/
 build/
 dist/
-*.egg-info/
+dashcode.egg-info/
 .idea/
+test.py

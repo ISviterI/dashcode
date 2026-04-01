@@ -1,9 +1,12 @@
 Metadata-Version: 2.4
 Name: dashcode
-Version: 1.0.1
+Version: 1.1.1
 Summary: A library for Geometry Dash level generation using .gmd files
-Home-page: https://github.com/ISviterI/dashcode
 Author: IWiterI
+Project-URL: Homepage, https://github.com/ISviterI/dashcode
+Project-URL: Wiki, https://github.com/ISviterI/dashcode/wiki
+Project-URL: Documentation, https://github.com/ISviterI/dashcode/wiki/Documentation
+Keywords: geometry dash,gd,level-generator,automation,2.2,python,dash,dashcode,code
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -13,7 +16,8 @@ Dynamic: author
 Dynamic: classifier
 Dynamic: description
 Dynamic: description-content-type
-Dynamic: home-page
+Dynamic: keywords
+Dynamic: project-url
 Dynamic: requires-python
 Dynamic: summary
 

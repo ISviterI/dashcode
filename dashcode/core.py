@@ -1,15 +1,11 @@
 import base64
 import gzip
-
-objects = []
 obj_string = ""
 lvlname = ""
 
-
-
 class Dashcode:
     def __init__(self):
-        global objects
+        self.objects = []
         self.params = {
             "NoTouch": 13,
             "Hide": 12,
@@ -29,14 +25,18 @@ class Dashcode:
             "Green":8,
             "Blue":9,
             "Fade":10,
-            "TargetColor":23
+            "TargetColor":23,
+            "Delay": 63,
+            "SpawnTrigger":62,
+            "MultiTrigger":87
         }
-        self.objects = {
+        self.objectids = {
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,
             "monster": 918, "bush": 128, "cloud": 129,
             "alpha": 1007, "toggle": 1049, "rotate": 1346,
             "zoom": 1913, "reverse": 1912,
             "checkpoint": 2063,
+            "spawn":1268,
             "end": 3600,
             "p_blue": 10, "p_yellow": 11, "p_green": 2926,
             "p_cube": 12, "p_ship": 13, "p_ball": 47, "p_ufo": 111,
@@ -48,14 +48,15 @@ class Dashcode:
             "square": {"SQ":0},
             "corridor": {"X":1},
         }
-
+        self.timeline = {}
     def setobjects(self, objs:dict):
-        self.objects = objs
+        self.objectids = objs
 
     def setparams(self, params:dict):
         self.params = params
 
     def addobject(self, obj: str, params: dict):
+        objects = self.objects
         if len(objects) <= 0:
             objects.append(
                 f"1,1,2,{str(-10 * 30)},3,{str(-10 * 30)},12,1,13,1")
@@ -67,7 +68,7 @@ class Dashcode:
             else:
                 extraparams += f",{str(param)},{value}"
 
-        oid = self.objects.get(obj, 1)
+        oid = self.objectids.get(obj, 1)
         if oid:
             objects.append(
                 f"1,{str(oid)},2,{str(params.get('X') * 30 + 15)},3,{str(params.get('Y') * 30 + 15)}{extraparams}")
@@ -85,7 +86,7 @@ class Dashcode:
 
         return obj_dict
     def addprefab(self, obj:str, params:dict, prefab:str):
-        global objects
+        objects = self.objects
         extraparams = ""
         for param, value in params.items():
             if self.params.get(param) is not None:
@@ -94,7 +95,7 @@ class Dashcode:
             else:
                 extraparams += f",{str(param)},{value}"
 
-        oid = self.objects.get(obj, 1)
+        oid = self.objectids.get(obj, 1)
         if prefab:
             #print("1")
             fab = self.prefabs.get(prefab)
@@ -134,6 +135,20 @@ class Dashcode:
                         newobjs.append(
                             f"1,{str(oid)},2,{str(params.get('X') * 30 + 15 + params.get("EX") * 30)},3,{str(params.get('Y') * 30 + 15 + (i * 30))}{extraparams}")
                 objects += newobjs
+    def build_timeline(self, timeline:list):
+        cdelay = 0
+        for tlobj in timeline:
+            i = tlobj.get("Index")
+            v = tlobj.get("Value")
+            if i == "wait":
+                cdelay += v
+            elif i == "spawn":
+                self.addobject("spawn", {"X":-1, "Y":6, "Delay":str(cdelay),"TGroup":str(v)})
+            else:
+                params = {"X":-1,"Y":5}
+                for i2,v2 in v.items():
+                    params[i2] = v2
+                self.addobject(i,params)
     def create_gmd_file(self, level_name, author_name, objects_string):
         global lvlname
         lvlname = level_name
@@ -143,6 +158,7 @@ class Dashcode:
         return f'''<?xml version="1.0"?><plist version="1.0" gjver="2.0"><dict><k>kCEK</k><i>4</i><k>k2</k><s>{level_name}</s><k>k4</k><s>{b64_objects}</s><k>k5</k><s>{author_name}</s><k>k11</k><i>1091</i><k>k16</k><i>1</i><k>k80</k><i>56</i></dict></plist>'''
 
     def decode_objects(self):
+        objects = self.objects
         global obj_string
         obj_string = ";".join(objects) + ";"
         return obj_string

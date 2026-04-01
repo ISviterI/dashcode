@@ -9,6 +9,13 @@ Dashcode is a specialized Python library for the programmatic generation of Geom
 * **Verified Mapping**: Includes corrected IDs for critical items like the Checkpoint (2063) and TouchTrigger logic.
 * **Extensible Logic**: Fully customizable object and parameter dictionaries via `setobjects()` and `setparams()`.
 * **Direct GMD Export**: Encode and package your level data into a ready-to-import .gmd file format.
+* **Timelines**: You can make a list of actions and objects like spawn or create to build easier using `build_timeline()`
+
+## Examples
+Check the `/examples` directory for advanced usage:
+* `simple_level.py` - Basic object placement.
+* `timeline_demo.py` - Using `build_timeline()` for synced events.
+
 
 ## Installation
 

@@ -57,6 +57,19 @@ class Dashcode:
     def setparams(self, params:dict):
         self.params = params
 
+    def get_free_group(self):
+        used_groups = set()
+        for obj in self.objects:
+            if "57" in obj:
+                parsed = Dashcode().parse_object_string(obj)
+                for i,v in parsed.items():
+                    #print(i,v,type(i))
+                    if i == "57":
+                        used_groups.add(int(v))
+        current_id = 1
+        while current_id in used_groups:
+            current_id += 1
+        return str(current_id)
     def addobject(self, obj: str, params: dict):
         objects = self.objects
         if len(objects) <= 0:
@@ -64,11 +77,12 @@ class Dashcode:
                 f"1,1,2,{str(-10 * 30)},3,{str(-10 * 30)},12,1,13,1")
         extraparams = ""
         for param, value in params.items():
-            if self.params.get(param) is not None:
-                pid = self.params[param]
-                extraparams += f",{str(pid)},{value}"
-            else:
-                extraparams += f",{str(param)},{value}"
+            for i in self.params:
+                if param.startswith(i):
+                    pid = self.params[param]
+                    extraparams += f",{str(pid)},{value}"
+                else:
+                    extraparams += f",{str(param)},{value}"
 
         oid = self.objectids.get(obj, 1)
         if oid:

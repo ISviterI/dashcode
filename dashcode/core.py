@@ -2,6 +2,7 @@ import base64
 import gzip
 from operator import index
 
+timelineY = 3
 obj_string = ""
 lvlname = ""
 
@@ -60,7 +61,6 @@ class Dashcode:
             "square": {"SQ":0},
             "corridor": {"X":1},
         }
-        self.timeline = {}
     def setobjects(self, objs:dict):
         self.objectids = objs
     def export_gmd(self, filedata, filename:str="Level"):
@@ -182,20 +182,39 @@ class Dashcode:
                 place(base_x, base_y + i)
                 place(base_x + ex, base_y + i)
         return placed
-    def build_timeline(self, timeline:list):
-        cdelay = 0
-        for tlobj in timeline:
-            i = tlobj.get("Index")
-            v = tlobj.get("Value")
-            if i == "wait":
-                cdelay += v
-            elif i == "spawn":
-                self.addobject("spawn", {"X":-1, "Y":6, "Delay":str(cdelay),"TGroup":str(v)})
-            else:
-                params = {"X":-1,"Y":5}
-                for i2,v2 in v.items():
-                    params[i2] = v2
-                self.addobject(i,params)
+    def build_timeline(dcself):
+        class Timeline:
+            def __init__(self):
+                self.timeline = []
+                self.delay = 0
+                self.spawn_trigger_enabled = False
+                self.spawn_group = dcself.get_free_group()
+                self.x_position = -1
+                self.x2_position = -1
+                self.spawn_trigger_on_objects = False
+            def spawn(self, group:int):
+                if self.spawn_trigger_enabled:
+                    dcself.addobject("spawn", {"X": self.x_position, "Y": 6, "Delay": str(self.delay), "TGroup": str(group),"SpawnTrigger":1,"MultiTrigger":1})
+                else:
+                    dcself.addobject("spawn", {"X": self.x_position, "Y": 6, "Delay": str(self.delay), "TGroup": str(group)})
+                self.timeline.append(["spawn",str(group)])
+                self.x_position += -1
+            def wait(self, seconds:float):
+                self.delay += seconds
+                self.timeline.append(["wait",str(seconds)])
+            def create_object(self, obj:str, params:dict):
+                dcself.addobject(obj, params)
+                if params.get("X") is None and params.get("Y") is None:
+                    params["X"] = self.x2_position
+                    self.x2_position += -1
+                    params["Y"] = 5
+                if self.spawn_trigger_on_objects:
+                    params["SpawnTrigger"] = 1
+                    params["MultiTrigger"] = 1
+                self.timeline.append([obj, params])
+        return Timeline()
+
+
     def create_gmd_file(self, level_name, objects_string):
         global lvlname
         lvlname = level_name

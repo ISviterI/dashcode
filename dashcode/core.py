@@ -121,6 +121,8 @@ class Dashcode:
             value = data[i + 1]
             obj_dict[key] = value
         return obj_dict
+    def removeobject(self, obj:str):
+        self.objects.remove(obj)
     def editobject(self, obj:str, params:dict):
         parsed = self.parse_object_string(obj)
         #print(parsed)
@@ -134,15 +136,18 @@ class Dashcode:
                 if not parsed.get(self.params.get(i)) and self.params.get(i):
                     newparams[str(self.params.get(i))] = str(v)
             elif i in ["X","Y"]:
-                print(i,v)
+                #print(i,v)
                 newparams[str(self.params.get(i))] = str(v*30)
             else:
                 newparams[str(i)] = str(v)
         new_obj = ""
         for i,v in newparams.items():
             new_obj += f"{i},{v},"
-        print(newparams)
-        print(new_obj)
+        #print(newparams)
+        #print(new_obj)
+        self.removeobject(obj)
+        self.objects.append(new_obj)
+        return new_obj
     def addprefab(self, obj: str, params: dict, prefab: str):
         fab = self.prefabs.get(prefab)
         if not fab:

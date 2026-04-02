@@ -8,7 +8,7 @@ if os.path.exists("README.md"):
 
 setup(
     name="dashcode",
-    version="1.2.7",
+    version="1.2.8",
     packages=find_packages(),
     author="IWiterI",
     description="A library for Geometry Dash level generation using .gmd files",

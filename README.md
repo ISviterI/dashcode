@@ -14,11 +14,10 @@ Dashcode is a specialized Python library for the programmatic generation of Geom
 * **Timelines**: You can make a list of actions and objects like spawn or create to build easier using `build_timeline()`
 
 ## Examples
-Check the `/examples` directory for advanced usage:
-* `spikes_and_orbs.py` - Basic object placement.
-* `prefabs.py` - Placing objects using prefabs
-* `timeline_demo.py` - Using `build_timeline()` for synced events.
-
+Check the `/examples` in wiki for advanced usage of:
+Object placement
+Prefabs
+Timelines
 
 ## Installation
 

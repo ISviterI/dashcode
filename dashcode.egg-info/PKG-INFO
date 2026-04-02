@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dashcode
-Version: 1.2.7
+Version: 1.2.8
 Summary: A library for Geometry Dash level generation using .gmd files
 Author: IWiterI
 Project-URL: Homepage, https://github.com/ISviterI/dashcode

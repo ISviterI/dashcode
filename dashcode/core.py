@@ -1,5 +1,7 @@
 import base64
 import gzip
+from operator import index
+
 obj_string = ""
 lvlname = ""
 
@@ -36,7 +38,9 @@ class Dashcode:
             "TargetColor":23,
             "Delay": 63,
             "SpawnTrigger":62,
-            "MultiTrigger":87
+            "MultiTrigger":87,
+            "X":2,
+            "Y":3,
         }
         self.objectids = {
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,
@@ -108,6 +112,7 @@ class Dashcode:
         pos_y = params.get('Y', 0) * 30 + 15
         full_obj_string = f"1,{oid},2,{pos_x},3,{pos_y}{extraparams}"
         self.objects.append(full_obj_string)
+        return full_obj_string
     def parse_object_string(self,objstr):
         data = objstr.split(',')
         obj_dict = {}
@@ -116,7 +121,28 @@ class Dashcode:
             value = data[i + 1]
             obj_dict[key] = value
         return obj_dict
-
+    def editobject(self, obj:str, params:dict):
+        parsed = self.parse_object_string(obj)
+        #print(parsed)
+        newparams = {}
+        for i,v in parsed.items():
+            if not newparams.get(i):
+                newparams[i] = v
+        for i,v in params.items():
+            #print(i,v)
+            if self.params.get(i) and not i in ["X","Y"]:
+                if not parsed.get(self.params.get(i)) and self.params.get(i):
+                    newparams[str(self.params.get(i))] = str(v)
+            elif i in ["X","Y"]:
+                print(i,v)
+                newparams[str(self.params.get(i))] = str(v*30)
+            else:
+                newparams[str(i)] = str(v)
+        new_obj = ""
+        for i,v in newparams.items():
+            new_obj += f"{i},{v},"
+        print(newparams)
+        print(new_obj)
     def addprefab(self, obj: str, params: dict, prefab: str):
         fab = self.prefabs.get(prefab)
         if not fab:
@@ -125,11 +151,13 @@ class Dashcode:
         ey = params.get('EY', 0)
         base_x = params.get('X', 0)
         base_y = params.get('Y', 0)
+        placed = []
         def place(x_val, y_val):
             current_params = dict(params)
             current_params["X"] = x_val
             current_params["Y"] = y_val
-            self.addobject(obj, current_params)
+            preobj_str = self.addobject(obj, current_params)
+            placed.append(preobj_str)
         if fab.get("X") == 0:
             for i in range(ex):
                 place(base_x + i, base_y)
@@ -148,6 +176,7 @@ class Dashcode:
             for i in range(ey):
                 place(base_x, base_y + i)
                 place(base_x + ex, base_y + i)
+        return placed
     def build_timeline(self, timeline:list):
         cdelay = 0
         for tlobj in timeline:

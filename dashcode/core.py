@@ -3,10 +3,12 @@ import gzip
 from operator import index
 
 timelineY = 3
+itemeditx = -1
 obj_string = ""
 lvlname = ""
 
 print("Dashcode loaded! Have fun and also join our discord server please: https://discord.gg/MXv3KTFmPE")
+
 
 class Dashcode:
     def __init__(self):
@@ -16,12 +18,12 @@ class Dashcode:
             "Hide": 12,
             "Group": 57,
             "TGroup": 51,
-            "MoveX":28,
-            "MoveY":29,
-            "LockToPX":34,
+            "MoveX": 28,
+            "MoveY": 29,
+            "LockToPX": 34,
             "LockToPY": 35,
-            "UseTarget":36,
-            "TMoveGroup":39,
+            "UseTarget": 36,
+            "TMoveGroup": 39,
             "Duration": 10,
             "Alpha": 11,
             "TouchTrigger": 11,
@@ -32,53 +34,69 @@ class Dashcode:
             "RotateDegrees": 68,
             "Times360": 69,
             "LockRot": 70,
-            "Red":7,
-            "Green":8,
-            "Blue":9,
-            "Fade":10,
-            "TargetColor":23,
+            "Red": 7,
+            "Green": 8,
+            "Blue": 9,
+            "Fade": 10,
+            "TargetColor": 23,
             "Delay": 63,
-            "SpawnTrigger":62,
-            "MultiTrigger":87,
-            "X":2,
-            "Y":3,
+            "SpawnTrigger": 62,
+            "MultiTrigger": 87,
+            "X": 2,
+            "Y": 3,
+            "ItemA": 80,
+            "ItemB": 95,
+            "TItemId": 51,
+            "ItemValue": 77,
+            "ItemModType": 476,
+            "ItemMod": 479,
+            "Comparison": 88,
+            "2ItemMod":483,
+            "2TGroup":71,
         }
         self.objectids = {
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,
             "monster": 918, "bush": 128, "cloud": 129,
             "alpha": 1007, "toggle": 1049, "rotate": 1346,
-            "zoom": 1913, "reverse": 1912, "move":901,
+            "zoom": 1913, "reverse": 1912, "move": 901,
             "checkpoint": 2063,
-            "spawn":1268,
+            "spawn": 1268,
             "end": 3600,
             "p_blue": 10, "p_yellow": 11, "p_green": 2926,
             "p_cube": 12, "p_ship": 13, "p_ball": 47, "p_ufo": 111,
-            "p_wave": 660, "p_robot": 745, "p_spider": 1331, "p_swing": 1933
+            "p_wave": 660, "p_robot": 745, "p_spider": 1331, "p_swing": 1933,
+            "h_block": 1859, "d_block": 1755, "f_block": 2866,
+            "item_edit": 3619, "item_compare": 3620, "item_display": 1615
         }
         self.prefabs = {
-            "wall": {"Y":0},
-            "platform": {"X":0},
-            "square": {"SQ":0},
-            "corridor": {"X":1},
+            "wall": {"Y": 0},
+            "platform": {"X": 0},
+            "square": {"SQ": 0},
+            "corridor": {"X": 1},
         }
-    def setobjects(self, objs:dict):
+        self.variables = {}
+
+    def setobjects(self, objs: dict):
         self.objectids = objs
-    def export_gmd(self, filedata, filename:str="Level"):
+
+    def export_gmd(self, filedata, filename: str = "Level"):
         with open(f"{filename}.gmd", "w", encoding="utf-8") as f:
             f.write(filedata)
-    def setparams(self, params:dict):
+
+    def setparams(self, params: dict):
         self.params = params
 
     def format_groups(self, group_list):
         if not group_list:
             return ""
         return ".".join(map(str, group_list))
+
     def get_free_group(self):
         used_groups = set()
         for obj in self.objects:
             if "57" in obj:
                 parsed = Dashcode().parse_object_string(obj)
-                for i2,v2 in parsed.items():
+                for i2, v2 in parsed.items():
                     #print(i,v,type(i))
                     if i2 == "57":
                         for v in v2.split("."):
@@ -113,7 +131,8 @@ class Dashcode:
         full_obj_string = f"1,{oid},2,{pos_x},3,{pos_y}{extraparams}"
         self.objects.append(full_obj_string)
         return full_obj_string
-    def parse_object_string(self,objstr):
+
+    def parse_object_string(self, objstr):
         data = objstr.split(',')
         obj_dict = {}
         for i in range(0, len(data) - 1, 2):
@@ -121,33 +140,36 @@ class Dashcode:
             value = data[i + 1]
             obj_dict[key] = value
         return obj_dict
-    def removeobject(self, obj:str):
+
+    def removeobject(self, obj: str):
         self.objects.remove(obj)
-    def editobject(self, obj:str, params:dict):
+
+    def editobject(self, obj: str, params: dict):
         parsed = self.parse_object_string(obj)
         #print(parsed)
         newparams = {}
-        for i,v in parsed.items():
+        for i, v in parsed.items():
             if not newparams.get(i):
                 newparams[i] = v
-        for i,v in params.items():
+        for i, v in params.items():
             #print(i,v)
-            if self.params.get(i) and not i in ["X","Y"]:
+            if self.params.get(i) and not i in ["X", "Y"]:
                 if not parsed.get(self.params.get(i)) and self.params.get(i):
                     newparams[str(self.params.get(i))] = str(v)
-            elif i in ["X","Y"]:
+            elif i in ["X", "Y"]:
                 #print(i,v)
-                newparams[str(self.params.get(i))] = str(v*30)
+                newparams[str(self.params.get(i))] = str(v * 30)
             else:
                 newparams[str(i)] = str(v)
         new_obj = ""
-        for i,v in newparams.items():
+        for i, v in newparams.items():
             new_obj += f"{i},{v},"
         #print(newparams)
         #print(new_obj)
         self.removeobject(obj)
         self.objects.append(new_obj)
         return new_obj
+
     def addprefab(self, obj: str, params: dict, prefab: str):
         fab = self.prefabs.get(prefab)
         if not fab:
@@ -157,12 +179,14 @@ class Dashcode:
         base_x = params.get('X', 0)
         base_y = params.get('Y', 0)
         placed = []
+
         def place(x_val, y_val):
             current_params = dict(params)
             current_params["X"] = x_val
             current_params["Y"] = y_val
             preobj_str = self.addobject(obj, current_params)
             placed.append(preobj_str)
+
         if fab.get("X") == 0:
             for i in range(ex):
                 place(base_x + i, base_y)
@@ -182,6 +206,7 @@ class Dashcode:
                 place(base_x, base_y + i)
                 place(base_x + ex, base_y + i)
         return placed
+
     def build_timeline(dcself):
         class Timeline:
             def __init__(self):
@@ -192,28 +217,85 @@ class Dashcode:
                 self.x_position = -1
                 self.x2_position = -1
                 self.spawn_trigger_on_objects = False
-            def spawn(self, group:int):
+
+            def spawn(self, group: int):
                 if self.spawn_trigger_enabled:
-                    dcself.addobject("spawn", {"X": self.x_position, "Y": 6, "Delay": str(self.delay), "TGroup": str(group),"SpawnTrigger":1,"MultiTrigger":1})
+                    dcself.addobject("spawn",
+                                     {"X": self.x_position, "Y": 6, "Delay": str(self.delay), "TGroup": str(group),
+                                      "Group": self.spawn_group, "SpawnTrigger": 1, "MultiTrigger": 1})
                 else:
-                    dcself.addobject("spawn", {"X": self.x_position, "Y": 6, "Delay": str(self.delay), "TGroup": str(group)})
-                self.timeline.append(["spawn",str(group)])
+                    dcself.addobject("spawn",
+                                     {"X": self.x_position, "Y": 6, "Delay": str(self.delay), "TGroup": str(group),
+                                      "Group": self.spawn_group})
+                self.timeline.append(["spawn", str(group)])
                 self.x_position += -1
-            def wait(self, seconds:float):
+
+            def wait(self, seconds: float):
                 self.delay += seconds
-                self.timeline.append(["wait",str(seconds)])
-            def create_object(self, obj:str, params:dict):
-                dcself.addobject(obj, params)
+                self.timeline.append(["wait", str(seconds)])
+
+            def create_object(self, obj: str, params: dict):
                 if params.get("X") is None and params.get("Y") is None:
                     params["X"] = self.x2_position
-                    self.x2_position += -1
                     params["Y"] = 5
+                    self.x2_position += -1
                 if self.spawn_trigger_on_objects:
                     params["SpawnTrigger"] = 1
                     params["MultiTrigger"] = 1
                 self.timeline.append([obj, params])
+                dcself.addobject(obj, params)
+
         return Timeline()
 
+    def add_variable(self, variable: int, value: int):
+        global itemeditx
+        params = {
+            "X": itemeditx,
+            "Y": 4,
+            "TGroup": variable,
+            "ItemMod": value,
+        }
+        itemeditx -= 1
+        raw = self.addobject("item_edit", params)
+        self.variables[variable] = value
+        return raw
+    def set_variable(self, variable:int, value:int, x:float, y:float, touchtrigger:bool):
+        params = {
+            "X": x,
+            "Y": y,
+            "TGroup": variable,
+            "ItemMod": value,
+        }
+        if touchtrigger:
+            params["TouchTrigger"] = 1
+        raw = self.addobject("item_edit", params)
+        self.variables[variable] = value
+        return raw
+    def if_variable(self, variable:int, value:int, x:float, y:float, touchtrigger:bool=False, truegid:int=0,falsegid:int=0, modtype:str="=="):
+        params = {
+            "X": x,
+            "Y": y,
+            "ItemA": variable,
+            "ItemMod": 1,
+            "2ItemMod": value,
+            "TGroup": truegid,
+            "2TGroup": falsegid,
+        }
+        if touchtrigger:
+            params["TouchTrigger"] = 1
+        modtypes = {
+            "==":0,
+            ">":1,
+            "<":2,
+            ">=":3,
+            "<=":4,
+            "!=":5
+        }
+        params["ItemModType"] = modtypes[modtype]
+        raw = self.addobject("item_compare", params)
+        return raw
+    def get_variable(self, variable:int):
+        return self.variables[variable]
 
     def create_gmd_file(self, level_name, objects_string):
         global lvlname

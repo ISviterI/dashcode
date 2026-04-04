@@ -67,7 +67,7 @@ class Dashcode:
         self.objectids = {
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,
             "monster": 918, "bush": 128, "cloud": 129,
-            "alpha": 1007, "toggle": 1049, "rotate": 1346,
+            "alpha": 1007, "toggle": 1049, "rotate": 1346, "static_camera":1914,
             "zoom": 1913, "reverse": 1912, "move": 901, "adv_follow":3016,
             "checkpoint": 2063,
             "spawn": 1268,

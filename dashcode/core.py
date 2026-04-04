@@ -76,7 +76,7 @@ class Dashcode:
             "p_blue": 10, "p_yellow": 11, "p_green": 2926,
             "p_cube": 12, "p_ship": 13, "p_ball": 47, "p_ufo": 111,
             "p_wave": 660, "p_robot": 745, "p_spider": 1331, "p_swing": 1933,
-            "h_block": 1859, "d_block": 1755, "f_block": 2866,
+            "h_block": 1859, "d_block": 1755, "f_block": 2866, "collision_state":3640,
             "item_edit": 3619, "item_compare": 3620, "item_display": 1615,
         }
         self.prefabs = {
@@ -84,6 +84,47 @@ class Dashcode:
             "platform": {"X": 0},
             "square": {"SQ": 0},
             "corridor": {"X": 1},
+            "door": {"advanced":True, "variable:offgroup":self.get_free_group(), "variable:ongroup":self.get_free_group(), "variable:doorgroup":self.get_free_group(), "objs":[
+                {"obj":"collision_state","params":
+                    {
+                    "X":"custom",
+                    "Y":"custom",
+                    "ScaleX":"custom:plus:1",
+                    "ScaleY":"custom",
+                    "TGroup":"variable:offgroup",
+                    "2TGroup":"variable:ongroup",
+                    },
+                },
+                {"obj":"custom","params":
+                    {
+                        "X":"custom",
+                        "Y":"custom",
+                        "ScaleX":"custom",
+                        "ScaleY":"custom",
+                    },
+                },
+                {"obj": "toggle", "params":
+                    {
+                        "X": -2,
+                        "Y": 1,
+                        "SpawnTrigger":1,
+                        "MultiTrigger":1,
+                        "TGroup":"variable:doorgroup",
+                        "Group":"variable:offgroup"
+                    },
+                 },
+                {"obj": "toggle", "params":
+                    {
+                        "X": -3,
+                        "Y": 1,
+                        "SpawnTrigger": 1,
+                        "MultiTrigger": 1,
+                        "ActivateGroup":1,
+                        "TGroup": "variable:doorgroup",
+                        "Group": "variable:ongroup"
+                    },
+                 },
+            ]}
         }
         self.variables = {}
 
@@ -180,7 +221,8 @@ class Dashcode:
         self.removeobject(obj)
         self.objects.append(new_obj)
         return new_obj
-
+    def create_prefab(self, name:str, params:dict):
+        self.prefabs[name] = params
     def addprefab(self, obj: str, params: dict, prefab: str):
         fab = self.prefabs.get(prefab)
         if not fab:
@@ -216,6 +258,33 @@ class Dashcode:
             for i in range(ey):
                 place(base_x, base_y + i)
                 place(base_x + ex, base_y + i)
+        if fab.get("advanced"):
+            for fake_i,v in fab.items():
+                i = fake_i.split(":")
+                variables = {}
+                if i[0] == "variable":
+                    variables[i[1]] = v
+                elif i[0] == "objs":
+                    for fake_obj in v:
+                        obj_params = {}
+                        obj2:dict = fake_obj
+                        for param,value in obj2.get("params").items():
+                            ril_value = 0
+                            global ril_value
+                            split_value = value.split(":")
+                            if split_value[0] == "variable":
+                                ril_value = variables.get(split_value[1])
+                            elif split_value[0] == "custom":
+                                ril_value = params.get(param)
+                                if split_value[1] == "plus":
+                                    ril_value = float(ril_value) + float(split_value[2])
+                            else:
+                                ril_value = value
+                            obj_params[param] = ril_value
+                        if obj2.get("obj") == "custom":
+                            obj2["obj"] = obj
+                        raw = self.addobject(obj2.get("obj"), obj_params)
+                        placed.append(raw)
         return placed
 
     def build_timeline(dcself):

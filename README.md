@@ -14,6 +14,7 @@ Dashcode is a specialized Python library for the programmatic generation of Geom
 * **Timelines**: You can make a list of actions and objects like spawn or create to build easier using `build_timeline()`
 * **Variables**: Add variables using ItemIds with `add_variable()` or change the variable in level using `set_variable()`
 or activate groups if {variable} is {value} with `if_variable()` or just get it with `get_variable()`
+* **Prefabs**: You can add prefabs to your level using `addprefab()`, check documentation for more info
 
 ## Examples
 Check the `/examples` in wiki for advanced usage of:

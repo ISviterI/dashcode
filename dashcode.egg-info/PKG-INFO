@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dashcode
-Version: 1.3.1
+Version: 1.4.0
 Summary: A library for Geometry Dash level generation using .gmd files
 Author: IWiterI
 Project-URL: Homepage, https://github.com/ISviterI/dashcode
@@ -36,6 +36,8 @@ Dashcode is a specialized Python library for the programmatic generation of Geom
 * **Extensible Logic**: Fully customizable object and parameter dictionaries via `setobjects()` and `setparams()`.
 * **Direct GMD Export**: Encode and package your level data into a ready-to-import .gmd file format.
 * **Timelines**: You can make a list of actions and objects like spawn or create to build easier using `build_timeline()`
+* **Variables**: Add variables using ItemIds with `add_variable()` or change the variable in level using `set_variable()`
+or activate groups if {variable} is {value} with `if_variable()` or just get it with `get_variable()`
 
 ## Examples
 Check the `/examples` in wiki for advanced usage of:

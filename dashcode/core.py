@@ -31,6 +31,7 @@ class Dashcode:
             "ScaleX": 128,
             "ScaleY": 129,
             "Zoom": 107,
+            "Rotation":6,
             "RotateDegrees": 68,
             "Times360": 69,
             "LockRot": 70,
@@ -39,7 +40,6 @@ class Dashcode:
             "Blue": 9,
             "Fade": 10,
             "TargetColor": 23,
-            "Delay": 63,
             "SpawnTrigger": 62,
             "MultiTrigger": 87,
             "X": 2,
@@ -53,12 +53,22 @@ class Dashcode:
             "Comparison": 88,
             "2ItemMod":483,
             "2TGroup":71,
+            "Delay":292,
+            "FollowGid":71,
+            "MaxSpeed":298,
+            "MaxRange":308,
+            "UseP1":138,
+            "UseP2":200,
+            "UseCenter":201,
+            "Static_TGroup":71,
+            "ExitStatic":110,
+            "ExitInstant":465
         }
         self.objectids = {
             "block": 1, "spike": 8, "yorb": 36, "coin": 1329,
             "monster": 918, "bush": 128, "cloud": 129,
             "alpha": 1007, "toggle": 1049, "rotate": 1346,
-            "zoom": 1913, "reverse": 1912, "move": 901,
+            "zoom": 1913, "reverse": 1912, "move": 901, "adv_follow":3016,
             "checkpoint": 2063,
             "spawn": 1268,
             "end": 3600,
@@ -66,7 +76,7 @@ class Dashcode:
             "p_cube": 12, "p_ship": 13, "p_ball": 47, "p_ufo": 111,
             "p_wave": 660, "p_robot": 745, "p_spider": 1331, "p_swing": 1933,
             "h_block": 1859, "d_block": 1755, "f_block": 2866,
-            "item_edit": 3619, "item_compare": 3620, "item_display": 1615
+            "item_edit": 3619, "item_compare": 3620, "item_display": 1615,
         }
         self.prefabs = {
             "wall": {"Y": 0},
